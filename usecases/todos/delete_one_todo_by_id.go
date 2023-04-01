@@ -1,15 +1,15 @@
-package activity_case
+package todo_case
 
 import (
 	"coding-test-be/repository"
-	ur "coding-test-be/repository/activity_repository"
+	ur "coding-test-be/repository/todo_repository"
 	"coding-test-be/usecases"
 	"context"
 )
 
-func (x *usecase) DeleteOneActivityByID(
-	ctx context.Context, req usecases.DeleteOneActivityByIDRequest) (
-	res usecases.DeleteOneActivityByIDResponse, httpcode int, err error,
+func (x *usecase) DeleteOneTodoByID(
+	ctx context.Context, req usecases.DeleteOneTodoByIDRequest) (
+	res usecases.DeleteOneTodoByIDResponse, httpcode int, err error,
 ) {
 	ctx, cancel := context.WithTimeout(ctx, x.Configuration.Timeout)
 	defer cancel()
@@ -21,12 +21,12 @@ func (x *usecase) DeleteOneActivityByID(
 
 	activityPG := ur.NewRepository(tx)
 
-	response, httpcode, err := activityPG.DeleteOneActivityByID(ctx, repository.DeleteOneActivityByIDRequest{ID: req.ID})
+	response, httpcode, err := activityPG.DeleteOneTodoByID(ctx, repository.DeleteOneTodoByIDRequest{ID: req.ID})
 	if err != nil {
 		return res, httpcode, err
 	}
 
-	res = usecases.DeleteOneActivityByIDResponse{
+	res = usecases.DeleteOneTodoByIDResponse{
 		ID: response.ID,
 	}
 

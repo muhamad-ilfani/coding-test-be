@@ -1,7 +1,7 @@
 package app
 
 import (
-	"coding-test-be/repository/user_repository/query"
+	query "coding-test-be/repository/postgres_init"
 	"context"
 	"fmt"
 	"os"

@@ -5,7 +5,7 @@ import (
 	"coding-test-be/usecases"
 	"context"
 
-	ur "coding-test-be/repository/user_repository"
+	ur "coding-test-be/repository/activity_repository"
 )
 
 func (x *usecase) CreateActivity(

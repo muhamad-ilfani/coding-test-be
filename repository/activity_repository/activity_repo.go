@@ -2,7 +2,7 @@ package activity_repo
 
 import (
 	"coding-test-be/repository"
-	"coding-test-be/repository/user_repository/query"
+	"coding-test-be/repository/activity_repository/query"
 	"context"
 	"log"
 	"net/http"
@@ -160,9 +160,7 @@ func (x *PostgreSQLConn) DeleteOneActivityByID(
 		return res, http.StatusInternalServerError, err
 	}
 
-	res = repository.DeleteOneActivityByIDResponse{
-		ID: req.ID,
-	}
+	res = repository.DeleteOneActivityByIDResponse{ID: req.ID}
 
 	return res, httpcode, err
 }

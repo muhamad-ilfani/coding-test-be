@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS project2.todos(
     activity_group_id int8 NOT NULL,
     title VARCHAR(255) NOT NULL,
     priority VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT true,
     created_by VARCHAR(255) NOT NULL DEFAULT 'SYSTEM'::character varying,
     created_at timestamp NOT NULL DEFAULT now(),
     updated_by VARCHAR(255) NOT NULL DEFAULT 'SYSTEM'::character varying,

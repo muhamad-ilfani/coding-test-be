@@ -1,41 +1,20 @@
 package delivery
 
 import (
-	"coding-test-be/usecases"
 	"context"
 	"net/http"
 	"strconv"
 
+	"coding-test-be/usecases"
+
 	"github.com/labstack/echo"
 )
 
-func GetAllActivities(ctx context.Context, uc usecases.ActivityUseCase) echo.HandlerFunc {
+func CreateTodo(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx = c.Request().WithContext(ctx).Context()
 
-		form := usecases.GetAllActivitiesRequest{}
-
-		res, httpcode, err := uc.GetAllActivities(ctx, form)
-		if err != nil {
-			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToGetDataActivities,
-				"error":   err.Error(),
-			})
-		}
-
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"status":  SuccessMsg,
-			"message": SuccessMsg,
-			"data":    res,
-		})
-	}
-}
-
-func CreateActivity(ctx context.Context, uc usecases.ActivityUseCase) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		ctx = c.Request().WithContext(ctx).Context()
-
-		form := usecases.CreateActivityRequest{}
+		form := usecases.CreateTodoRequest{}
 
 		err := c.Bind(&form)
 		if err != nil {
@@ -45,7 +24,7 @@ func CreateActivity(ctx context.Context, uc usecases.ActivityUseCase) echo.Handl
 			})
 		}
 
-		res, httpcode, err := uc.CreateActivity(ctx, form)
+		res, httpcode, err := uc.CreateTodo(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
 				"message": FailedToCreateActivity,
@@ -61,20 +40,16 @@ func CreateActivity(ctx context.Context, uc usecases.ActivityUseCase) echo.Handl
 	}
 }
 
-func GetOneByID(ctx context.Context, uc usecases.ActivityUseCase) echo.HandlerFunc {
+func GetAllTodos(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx = c.Request().WithContext(ctx).Context()
 
-		GetId, _ := strconv.Atoi(c.Param("id"))
+		form := usecases.GetAllTodosRequest{}
 
-		form := usecases.GetOneActivityByIDRequest{
-			ID: int64(GetId),
-		}
-
-		res, httpcode, err := uc.GetOneActivityByID(ctx, form)
+		res, httpcode, err := uc.GetAllTodos(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToGetDataActivities,
+				"message": FailedToCreateActivity,
 				"error":   err.Error(),
 			})
 		}
@@ -87,10 +62,34 @@ func GetOneByID(ctx context.Context, uc usecases.ActivityUseCase) echo.HandlerFu
 	}
 }
 
-func UpdateOneActivityByID(ctx context.Context, uc usecases.ActivityUseCase) echo.HandlerFunc {
+func GetOneTodoByID(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx = c.Request().WithContext(ctx).Context()
-		form := usecases.UpdateOneActivityByIDRequest{}
+
+		GetId, _ := strconv.Atoi(c.Param("id"))
+
+		form := usecases.GetOneTodoByIDRequest{ID: int64(GetId)}
+
+		res, httpcode, err := uc.GetOneTodoByID(ctx, form)
+		if err != nil {
+			return c.JSON(httpcode, map[string]interface{}{
+				"message": FailedToCreateActivity,
+				"error":   err.Error(),
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"status":  SuccessMsg,
+			"message": SuccessMsg,
+			"data":    res,
+		})
+	}
+}
+
+func UpdateOneTodoByID(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx = c.Request().WithContext(ctx).Context()
+		form := usecases.UpdateOneTodoByIDRequest{}
 
 		GetId, _ := strconv.Atoi(c.Param("id"))
 
@@ -104,7 +103,7 @@ func UpdateOneActivityByID(ctx context.Context, uc usecases.ActivityUseCase) ech
 
 		form.ID = int64(GetId)
 
-		res, httpcode, err := uc.UpdateOneActivityByID(ctx, form)
+		res, httpcode, err := uc.UpdateOneTodoByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
 				"message": FailedToUpdateDataActivities,
@@ -120,15 +119,15 @@ func UpdateOneActivityByID(ctx context.Context, uc usecases.ActivityUseCase) ech
 	}
 }
 
-func DeleteOneActivityByID(ctx context.Context, uc usecases.ActivityUseCase) echo.HandlerFunc {
+func DeleteOneTodoByID(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx = c.Request().WithContext(ctx).Context()
 
 		GetId, _ := strconv.Atoi(c.Param("id"))
 
-		form := usecases.DeleteOneActivityByIDRequest{ID: int64(GetId)}
+		form := usecases.DeleteOneTodoByIDRequest{ID: int64(GetId)}
 
-		_, httpcode, err := uc.DeleteOneActivityByID(ctx, form)
+		_, httpcode, err := uc.DeleteOneTodoByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
 				"message": FailedToDeleteDataActivities,

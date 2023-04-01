@@ -3,11 +3,6 @@ package query
 import _ "embed"
 
 var (
-	//go:embed create_schema.sql
-	CreateSchema string
-	//go:embed create_table.sql
-	CreateTable string
-
 	//go:embed activity/get_all_activity.sql
 	GetAllActivities string
 	//go:embed activity/create_activity.sql

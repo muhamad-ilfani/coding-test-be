@@ -2,7 +2,7 @@ package activity_case
 
 import (
 	"coding-test-be/repository"
-	ur "coding-test-be/repository/user_repository"
+	ur "coding-test-be/repository/activity_repository"
 	"coding-test-be/usecases"
 	"context"
 )

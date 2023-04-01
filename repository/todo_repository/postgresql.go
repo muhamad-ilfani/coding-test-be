@@ -1,4 +1,4 @@
-package activity_repo
+package todo_repo
 
 import (
 	"coding-test-be/repository"
@@ -13,7 +13,7 @@ type PostgreSQLConn struct {
 }
 
 type Repository interface {
-	repository.UserRepo
+	repository.TodoRepo
 }
 
 func NewRepository(tc *sqlx.Tx) Repository { return &PostgreSQLConn{tc} }

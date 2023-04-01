@@ -26,6 +26,7 @@ type echoObject struct {
 
 type UseCase struct {
 	usecases.ActivityUseCase
+	usecases.TodoUseCase
 }
 
 func NewEchoHandler(ctx context.Context, c *echo.Echo, uc UseCase) {

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type UserRepo interface {
+type ActivityRepo interface {
 	GetAllActivities(
 		ctx context.Context, req GetAllActivitiesRequest) (
 		res GetAllActivitiesResponse, httpcode int, err error,
