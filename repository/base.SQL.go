@@ -1,14 +1,13 @@
 package repository
 
 import (
+	"database/sql"
 	"fmt"
-
-	"github.com/jmoiron/sqlx"
 )
 
 type SQLTransaction struct{}
 
-func (SQLTransaction) EndTx(tx *sqlx.Tx, err error) error {
+func (SQLTransaction) EndTx(tx *sql.Tx, err error) error {
 	if tx == nil {
 		return fmt.Errorf("database: Invalid Transaction")
 	}

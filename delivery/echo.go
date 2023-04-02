@@ -17,6 +17,7 @@ const (
 	FailedToUpdateDataActivities = "Failed to Update Data Activitiy"
 	FailedToDeleteDataActivities = "Failed to Delete Data Activitiy"
 	DeleteMsg                    = "Activity with ID %v Not Found"
+	DeleteMsgTodo                = "Todo with ID %v Not Found"
 )
 
 type echoObject struct {

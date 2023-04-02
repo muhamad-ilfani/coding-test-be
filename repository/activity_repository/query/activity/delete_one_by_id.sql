@@ -1,2 +1,2 @@
-DELETE FROM project2.activities 
-WHERE activity_id = $1;
+DELETE FROM challenge_2_be.activities 
+WHERE activity_id = ?;

@@ -13,4 +13,6 @@ var (
 	UpdateOneActivityByID string
 	//go:embed activity/delete_one_by_id.sql
 	DeleteOneActivityByID string
+	//go:embed activity/get_latest_id.sql
+	GetLatesActivityID string
 )

@@ -5,6 +5,7 @@ SELECT
     td.is_active "is_active",
     td.priority "priority",
     td.created_at "created_at",
-    td.updated_at "updated_at"
-FROM project2.todos td
+    td.updated_at "updated_at",
+    td.deleted_at "deleted_at"
+FROM challenge_2_be.todos td
 ORDER BY td.todo_id ASC;

@@ -26,6 +26,10 @@ type ActivityRepo interface {
 		ctx context.Context, req DeleteOneActivityByIDRequest) (
 		res DeleteOneActivityByIDResponse, httpcode int, err error,
 	)
+	GetLatesActivityID(
+		ctx context.Context, req GetLatesActivityIDRequest) (
+		res GetLatesActivityIDResponse, httpcode int, err error,
+	)
 }
 
 type GetAllActivitiesRequest struct{}
@@ -36,6 +40,7 @@ type GetAllActivitiesData struct {
 	Email     string
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	DeletedAt time.Time
 }
 type GetAllActivitiesResponse []GetAllActivitiesData
 
@@ -68,3 +73,6 @@ type DeleteOneActivityByIDRequest struct {
 	ID int64
 }
 type DeleteOneActivityByIDResponse DeleteOneActivityByIDRequest
+
+type GetLatesActivityIDRequest struct{}
+type GetLatesActivityIDResponse struct{ ID int64 }

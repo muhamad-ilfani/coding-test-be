@@ -2,14 +2,14 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"log"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo"
 )
 
 type App struct {
-	DB   *sqlx.DB
+	DB   *sql.DB
 	Echo *echo.Echo
 }
 
@@ -20,9 +20,9 @@ func Run(ctx context.Context) {
 		log.Fatal(err)
 	}
 
-	if err := app.initSchema(ctx); err != nil {
+	/*if err := app.initSchema(ctx); err != nil {
 		log.Fatal(err)
-	}
+	}*/
 
 	if err := app.initTable(ctx); err != nil {
 		log.Fatal(err)

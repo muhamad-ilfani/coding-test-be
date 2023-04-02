@@ -5,6 +5,8 @@ import (
 	ur "coding-test-be/repository/activity_repository"
 	"coding-test-be/usecases"
 	"context"
+	"errors"
+	"net/http"
 )
 
 func (x *usecase) UpdateOneActivityByID(
@@ -14,12 +16,19 @@ func (x *usecase) UpdateOneActivityByID(
 	ctx, cancel := context.WithTimeout(ctx, x.Configuration.Timeout)
 	defer cancel()
 
-	tx, err := x.Postgresql.BeginTxx(ctx, nil)
+	tx, err := x.Postgresql.BeginTx(ctx, nil)
 	if err == nil && tx != nil {
 		defer func() { err = new(repository.SQLTransaction).EndTx(tx, err) }()
 	}
 
 	activityPG := ur.NewRepository(tx)
+
+	getData, httpcode, err := activityPG.GetOneActivityByID(ctx, repository.GetOneActivityByIDRequest{
+		ID: req.ID,
+	})
+	if getData.ID == 0 {
+		return res, http.StatusNotFound, errors.New("id not found")
+	}
 
 	response, httpcode, err := activityPG.UpdateOneActivityByID(ctx, repository.UpdateOneActivityByIDRequest{
 		ID:    req.ID,
@@ -30,11 +39,12 @@ func (x *usecase) UpdateOneActivityByID(
 	}
 
 	res = usecases.UpdateOneActivityByIDResponse{
-		ID:        response.ID,
-		Title:     response.Title,
-		Email:     response.Email,
-		CreatedAt: response.CreatedAt.String(),
+		ID:        getData.ID,
+		Title:     getData.Title,
+		Email:     getData.Email,
+		CreatedAt: getData.CreatedAt.String(),
 		UpdatedAt: response.UpdatedAt.String(),
+		DeletedAt: getData.DeletedAt.String(),
 	}
 
 	return res, httpcode, err

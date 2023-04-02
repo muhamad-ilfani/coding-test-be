@@ -4,7 +4,6 @@ import (
 	"coding-test-be/repository"
 	"coding-test-be/repository/todo_repository/query"
 	"context"
-	"log"
 	"net/http"
 	"time"
 )
@@ -26,18 +25,9 @@ func (x *PostgreSQLConn) CreateTodo(
 		createdTime,
 	}
 
-	rows, err := x.tc.Query(query, args...)
+	_, err = x.tc.Query(query, args...)
 	if err != nil {
 		return res, http.StatusInternalServerError, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		err := rows.Scan(&id)
-		if err != nil {
-			log.Println(err)
-		}
 	}
 
 	res = repository.CreateTodoResponse{
@@ -69,9 +59,9 @@ func (x *PostgreSQLConn) GetAllTodos(
 
 	for rows.Next() {
 		data := repository.TodoList{}
-		err := rows.Scan(&data.ID, &data.ActivityGroupID, &data.Title, &data.IsActive, &data.Priority, &data.CreatedAt, &data.UpdatedAt)
+		err := rows.Scan(&data.ID, &data.ActivityGroupID, &data.Title, &data.IsActive, &data.Priority, &data.CreatedAt, &data.UpdatedAt, &data.DeletedAt)
 		if err != nil {
-			log.Println(err)
+			httpcode = http.StatusInternalServerError
 		}
 		res = append(res, data)
 	}
@@ -97,9 +87,9 @@ func (x *PostgreSQLConn) GetOneTodoByID(
 
 	for rows.Next() {
 		data := repository.GetOneTodoByIDResponse{}
-		err := rows.Scan(&data.ID, &data.ActivityGroupID, &data.Title, &data.IsActive, &data.Priority, &data.CreatedAt, &data.UpdatedAt)
+		err := rows.Scan(&data.ID, &data.ActivityGroupID, &data.Title, &data.IsActive, &data.Priority, &data.CreatedAt, &data.UpdatedAt, &data.DeletedAt)
 		if err != nil {
-			log.Println(err)
+			httpcode = http.StatusInternalServerError
 		}
 		res = data
 	}
@@ -115,28 +105,19 @@ func (x *PostgreSQLConn) UpdateOneTodoByID(
 
 	query := query.UpdateOneTodoByID
 	args := List{
-		req.ID,
 		req.Title,
 		req.Priority,
 		req.IsActive,
 		updatedTime,
+		req.ID,
 	}
 
-	rows, err := x.tc.Query(query, args...)
+	_, err = x.tc.Query(query, args...)
 	if err != nil {
 		return res, http.StatusInternalServerError, err
 	}
 
-	defer rows.Close()
-
-	for rows.Next() {
-		data := repository.UpdateOneTodoByIDResponse{}
-		err := rows.Scan(&data.ID, &data.ActivityGroupID, &data.Title, &data.IsActive, &data.Priority, &data.CreatedAt, &data.UpdatedAt)
-		if err != nil {
-			log.Println(err)
-		}
-		res = data
-	}
+	res.UpdatedAt = updatedTime
 
 	return res, httpcode, err
 }
@@ -156,6 +137,32 @@ func (x *PostgreSQLConn) DeleteOneTodoByID(
 	}
 
 	res = repository.DeleteOneTodoByIDResponse{ID: req.ID}
+
+	return res, httpcode, err
+}
+
+func (x *PostgreSQLConn) GetLatestIDTodo(
+	ctx context.Context, req repository.GetLatestIDTodoRequest) (
+	res repository.GetLatestIDTodoResponse, httpcode int, err error,
+) {
+	query := query.GetLatestIDTodo
+	args := List{}
+
+	rows, err := x.tc.Query(query, args...)
+	if err != nil {
+		return res, http.StatusInternalServerError, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		data := repository.GetLatestIDTodoResponse{}
+		err := rows.Scan(&data.ID)
+		if err != nil {
+			httpcode = http.StatusInternalServerError
+		}
+		res = data
+	}
 
 	return res, httpcode, err
 }

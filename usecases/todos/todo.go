@@ -2,9 +2,8 @@ package todo_case
 
 import (
 	"coding-test-be/usecases"
+	"database/sql"
 	"time"
-
-	"github.com/jmoiron/sqlx"
 )
 
 func New(c Configuration, d Depencency) usecases.TodoUseCase {
@@ -16,7 +15,7 @@ type Configuration struct {
 }
 
 type Depencency struct {
-	Postgresql *sqlx.DB
+	Postgresql *sql.DB
 }
 
 type usecase struct {

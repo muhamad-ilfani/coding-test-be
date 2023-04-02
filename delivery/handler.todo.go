@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -32,7 +33,7 @@ func CreateTodo(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc {
 			})
 		}
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
+		return c.JSON(http.StatusCreated, map[string]interface{}{
 			"status":  SuccessMsg,
 			"message": SuccessMsg,
 			"data":    res,
@@ -136,8 +137,8 @@ func DeleteOneTodoByID(ctx context.Context, uc usecases.TodoUseCase) echo.Handle
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"status":  SuccessMsg,
-			"message": SuccessMsg,
+			"status":  "Not Found",
+			"message": fmt.Sprintf(DeleteMsgTodo, GetId),
 		})
 	}
 }

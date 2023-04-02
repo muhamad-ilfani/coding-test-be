@@ -10,48 +10,7 @@ services:
     restart: on-failure
     volumes:
       - api:/usr/src/app/
-    depends_on:
-      - postgresdb
-    networks:
-      - mynetwork
-
-
-  postgresdb:
-    image: postgres:latest
-    container_name: myprojectdb
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST}
-    ports:
-      - '8090:5432'
-    expose: 
-      - '8090' 
-    restart: always
-    volumes:
-      - database_postgres:/var/lib/postgresql/data
-    networks:
-      - mynetwork
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_container
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    depends_on:
-      - postgresdb
-    ports:
-      - "5050:80"
-    networks:
-      - mynetwork
-    restart: unless-stopped
 
 volumes:
   api:
   database_postgres:
-
-networks:
-  mynetwork:
-    driver: bridge

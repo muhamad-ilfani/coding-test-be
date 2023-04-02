@@ -2,18 +2,17 @@ package todo_repo
 
 import (
 	"coding-test-be/repository"
-
-	"github.com/jmoiron/sqlx"
+	"database/sql"
 )
 
 type List []interface{}
 
 type PostgreSQLConn struct {
-	tc *sqlx.Tx
+	tc *sql.Tx
 }
 
 type Repository interface {
 	repository.TodoRepo
 }
 
-func NewRepository(tc *sqlx.Tx) Repository { return &PostgreSQLConn{tc} }
+func NewRepository(tc *sql.Tx) Repository { return &PostgreSQLConn{tc} }

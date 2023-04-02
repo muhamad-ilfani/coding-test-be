@@ -4,7 +4,6 @@ import (
 	"coding-test-be/repository"
 	"coding-test-be/repository/activity_repository/query"
 	"context"
-	"log"
 	"net/http"
 	"time"
 )
@@ -25,9 +24,9 @@ func (x *PostgreSQLConn) GetAllActivities(
 
 	for rows.Next() {
 		data := repository.GetAllActivitiesData{}
-		err := rows.Scan(&data.ID, &data.Title, &data.Email, &data.CreatedAt, &data.UpdatedAt)
+		err := rows.Scan(&data.ID, &data.Title, &data.Email, &data.CreatedAt, &data.UpdatedAt, &data.DeletedAt)
 		if err != nil {
-			log.Println(err)
+			httpcode = http.StatusInternalServerError
 		}
 		res = append(res, data)
 	}
@@ -50,18 +49,9 @@ func (x *PostgreSQLConn) CreateActivity(
 		createdTime,
 	}
 
-	rows, err := x.tc.Query(query, args...)
+	_, err = x.tc.Query(query, args...)
 	if err != nil {
 		return res, http.StatusInternalServerError, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		err := rows.Scan(&id)
-		if err != nil {
-			log.Println(err)
-		}
 	}
 
 	res = repository.CreateActivityResponse{
@@ -93,9 +83,9 @@ func (x *PostgreSQLConn) GetOneActivityByID(
 
 	for rows.Next() {
 		data := repository.GetOneActivityByIDResponse{}
-		err := rows.Scan(&data.ID, &data.Title, &data.Email, &data.CreatedAt, &data.UpdatedAt)
+		err := rows.Scan(&data.ID, &data.Title, &data.Email, &data.CreatedAt, &data.UpdatedAt, &data.DeletedAt)
 		if err != nil {
-			log.Println(err)
+			httpcode = http.StatusInternalServerError
 		}
 		res = data
 	}
@@ -116,23 +106,14 @@ func (x *PostgreSQLConn) UpdateOneActivityByID(
 
 	query := query.UpdateOneActivityByID
 	args := List{
-		req.ID,
 		req.Title,
 		updatedTime,
+		req.ID,
 	}
 
-	rows, err := x.tc.Query(query, args...)
+	_, err = x.tc.Query(query, args...)
 	if err != nil {
 		return res, http.StatusInternalServerError, err
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		err := rows.Scan(&email, &createdTime)
-		if err != nil {
-			log.Println(err)
-		}
 	}
 
 	res = repository.UpdateOneActivityByIDResponse{
@@ -141,6 +122,7 @@ func (x *PostgreSQLConn) UpdateOneActivityByID(
 		Email:     email,
 		CreatedAt: createdTime,
 		UpdatedAt: updatedTime,
+		DeletedAt: updatedTime,
 	}
 
 	return res, httpcode, err
@@ -161,6 +143,32 @@ func (x *PostgreSQLConn) DeleteOneActivityByID(
 	}
 
 	res = repository.DeleteOneActivityByIDResponse{ID: req.ID}
+
+	return res, httpcode, err
+}
+
+func (x *PostgreSQLConn) GetLatesActivityID(
+	ctx context.Context, req repository.GetLatesActivityIDRequest) (
+	res repository.GetLatesActivityIDResponse, httpcode int, err error,
+) {
+	query := query.GetLatesActivityID
+	args := List{}
+
+	rows, err := x.tc.Query(query, args...)
+	if err != nil {
+		return res, http.StatusInternalServerError, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		data := repository.GetLatesActivityIDResponse{}
+		err := rows.Scan(&data.ID)
+		if err != nil {
+			httpcode = http.StatusInternalServerError
+		}
+		res = data
+	}
 
 	return res, httpcode, err
 }

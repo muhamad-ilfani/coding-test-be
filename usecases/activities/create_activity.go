@@ -4,6 +4,8 @@ import (
 	"coding-test-be/repository"
 	"coding-test-be/usecases"
 	"context"
+	"errors"
+	"net/http"
 
 	ur "coding-test-be/repository/activity_repository"
 )
@@ -15,7 +17,11 @@ func (x *usecase) CreateActivity(
 	ctx, cancel := context.WithTimeout(ctx, x.Configuration.Timeout)
 	defer cancel()
 
-	tx, err := x.Postgresql.BeginTxx(ctx, nil)
+	if req.Title == "" {
+		return res, http.StatusBadRequest, errors.New("title must be provide")
+	}
+
+	tx, err := x.Postgresql.BeginTx(ctx, nil)
 	if err == nil && tx != nil {
 		defer func() { err = new(repository.SQLTransaction).EndTx(tx, err) }()
 	}
@@ -32,8 +38,13 @@ func (x *usecase) CreateActivity(
 		return res, httpcode, err
 	}
 
+	getLatesID, httpcode, err := userPG.GetLatesActivityID(ctx, repository.GetLatesActivityIDRequest{})
+	if err != nil {
+		return res, httpcode, err
+	}
+
 	res = usecases.CreateActivityResponse{
-		ID:        response.ID,
+		ID:        getLatesID.ID,
 		Title:     response.Title,
 		Email:     response.Email,
 		CreatedAt: response.CreatedAt.String(),

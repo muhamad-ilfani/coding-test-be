@@ -1,2 +1,2 @@
-DELETE FROM project2.todos 
-WHERE todo_id = $1;
+DELETE FROM challenge_2_be.todos 
+WHERE todo_id = ?;

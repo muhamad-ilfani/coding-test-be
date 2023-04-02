@@ -14,7 +14,7 @@ func (x *usecase) GetAllTodos(
 	ctx, cancel := context.WithTimeout(ctx, x.Configuration.Timeout)
 	defer cancel()
 
-	tx, err := x.Postgresql.BeginTxx(ctx, nil)
+	tx, err := x.Postgresql.BeginTx(ctx, nil)
 	if err == nil && tx != nil {
 		defer func() { err = new(repository.SQLTransaction).EndTx(tx, err) }()
 	}
@@ -37,6 +37,7 @@ func (x *usecase) GetAllTodos(
 			Priority:        val.Priority,
 			CreatedAt:       val.CreatedAt.String(),
 			UpdatedAt:       val.UpdatedAt.String(),
+			DeletedAt:       val.DeletedAt.String(),
 		})
 	}
 

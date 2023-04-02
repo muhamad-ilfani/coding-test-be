@@ -3,6 +3,7 @@ package delivery
 import (
 	"coding-test-be/usecases"
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -53,7 +54,7 @@ func CreateActivity(ctx context.Context, uc usecases.ActivityUseCase) echo.Handl
 			})
 		}
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
+		return c.JSON(http.StatusCreated, map[string]interface{}{
 			"status":  SuccessMsg,
 			"message": SuccessMsg,
 			"data":    res,
@@ -137,8 +138,8 @@ func DeleteOneActivityByID(ctx context.Context, uc usecases.ActivityUseCase) ech
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"status":  SuccessMsg,
-			"message": SuccessMsg,
+			"status":  "Not Found",
+			"message": fmt.Sprintf(DeleteMsg, GetId),
 		})
 	}
 }

@@ -13,4 +13,6 @@ var (
 	UpdateOneTodoByID string
 	//go:embed todo/delete_one_by_id.sql
 	DeleteOneTodoByID string
+	//go:embed todo/get_latest_id.sql
+	GetLatestIDTodo string
 )

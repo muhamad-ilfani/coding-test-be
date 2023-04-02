@@ -26,6 +26,10 @@ type TodoRepo interface {
 		ctx context.Context, req DeleteOneTodoByIDRequest) (
 		res DeleteOneTodoByIDResponse, httpcode int, err error,
 	)
+	GetLatestIDTodo(
+		ctx context.Context, req GetLatestIDTodoRequest) (
+		res GetLatestIDTodoResponse, httpcode int, err error,
+	)
 }
 
 type TodoList struct {
@@ -36,6 +40,7 @@ type TodoList struct {
 	Priority        string
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
+	DeletedAt       time.Time
 }
 
 type CreateTodoRequest struct {
@@ -66,4 +71,7 @@ type UpdateOneTodoByIDResponse TodoList
 type DeleteOneTodoByIDRequest struct {
 	ID int64
 }
-type DeleteOneTodoByIDResponse DeleteOneActivityByIDRequest
+type DeleteOneTodoByIDResponse DeleteOneTodoByIDRequest
+
+type GetLatestIDTodoRequest struct{}
+type GetLatestIDTodoResponse struct{ ID int64 }

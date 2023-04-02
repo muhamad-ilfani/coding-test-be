@@ -5,6 +5,8 @@ import (
 	ur "coding-test-be/repository/todo_repository"
 	"coding-test-be/usecases"
 	"context"
+	"errors"
+	"net/http"
 )
 
 func (x *usecase) CreateTodo(
@@ -14,7 +16,11 @@ func (x *usecase) CreateTodo(
 	ctx, cancel := context.WithTimeout(ctx, x.Configuration.Timeout)
 	defer cancel()
 
-	tx, err := x.Postgresql.BeginTxx(ctx, nil)
+	if req.Title == "" || req.ActivityGroupID == 0 {
+		return res, http.StatusBadRequest, errors.New("title required")
+	}
+
+	tx, err := x.Postgresql.BeginTx(ctx, nil)
 	if err == nil && tx != nil {
 		defer func() { err = new(repository.SQLTransaction).EndTx(tx, err) }()
 	}
@@ -33,8 +39,13 @@ func (x *usecase) CreateTodo(
 		return res, httpcode, err
 	}
 
+	getData, httpcode, err := userPG.GetLatestIDTodo(ctx, repository.GetLatestIDTodoRequest{})
+	if err != nil {
+		return res, httpcode, err
+	}
+
 	res = usecases.CreateTodoResponse{
-		ID:              response.ID,
+		ID:              getData.ID,
 		ActivityGroupID: response.ActivityGroupID,
 		Title:           response.Title,
 		IsActive:        response.IsActive,

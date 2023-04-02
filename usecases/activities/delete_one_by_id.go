@@ -14,7 +14,7 @@ func (x *usecase) DeleteOneActivityByID(
 	ctx, cancel := context.WithTimeout(ctx, x.Configuration.Timeout)
 	defer cancel()
 
-	tx, err := x.Postgresql.BeginTxx(ctx, nil)
+	tx, err := x.Postgresql.BeginTx(ctx, nil)
 	if err == nil && tx != nil {
 		defer func() { err = new(repository.SQLTransaction).EndTx(tx, err) }()
 	}
