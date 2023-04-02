@@ -38,13 +38,22 @@ func (x *usecase) UpdateOneActivityByID(
 		return res, httpcode, err
 	}
 
+	if str := getData.DeletedAt.String(); str == "0001-01-01 00:00:00 +0000 UTC" {
+		res.DeletedAt = nil
+	} else {
+		res.DeletedAt = &str
+	}
+
+	if req.Title != "" {
+		getData.Title = req.Title
+	}
+
 	res = usecases.UpdateOneActivityByIDResponse{
 		ID:        getData.ID,
 		Title:     getData.Title,
 		Email:     getData.Email,
 		CreatedAt: getData.CreatedAt.String(),
 		UpdatedAt: response.UpdatedAt.String(),
-		DeletedAt: getData.DeletedAt.String(),
 	}
 
 	return res, httpcode, err

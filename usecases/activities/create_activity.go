@@ -18,7 +18,7 @@ func (x *usecase) CreateActivity(
 	defer cancel()
 
 	if req.Title == "" {
-		return res, http.StatusBadRequest, errors.New("title must be provide")
+		return res, http.StatusBadRequest, errors.New("title cannot be null")
 	}
 
 	tx, err := x.Postgresql.BeginTx(ctx, nil)

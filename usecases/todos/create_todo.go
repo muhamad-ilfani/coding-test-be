@@ -16,8 +16,8 @@ func (x *usecase) CreateTodo(
 	ctx, cancel := context.WithTimeout(ctx, x.Configuration.Timeout)
 	defer cancel()
 
-	if req.Title == "" || req.ActivityGroupID == 0 {
-		return res, http.StatusBadRequest, errors.New("title required")
+	if req.Title == "" {
+		return res, http.StatusBadRequest, errors.New("title cannot be null")
 	}
 
 	tx, err := x.Postgresql.BeginTx(ctx, nil)

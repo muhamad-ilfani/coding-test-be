@@ -49,8 +49,9 @@ func CreateActivity(ctx context.Context, uc usecases.ActivityUseCase) echo.Handl
 		res, httpcode, err := uc.CreateActivity(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToCreateActivity,
-				"error":   err.Error(),
+				"status":  "Bad Request",
+				"message": err.Error(),
+				"data":    nil,
 			})
 		}
 
@@ -75,8 +76,9 @@ func GetOneByID(ctx context.Context, uc usecases.ActivityUseCase) echo.HandlerFu
 		res, httpcode, err := uc.GetOneActivityByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToGetDataActivities,
-				"error":   err.Error(),
+				"status":  "Not Found",
+				"message": fmt.Sprintf(DeleteMsg, GetId),
+				"data":    nil,
 			})
 		}
 
@@ -108,8 +110,9 @@ func UpdateOneActivityByID(ctx context.Context, uc usecases.ActivityUseCase) ech
 		res, httpcode, err := uc.UpdateOneActivityByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToUpdateDataActivities,
-				"error":   err.Error(),
+				"status":  "Not Found",
+				"message": fmt.Sprintf(DeleteMsg, GetId),
+				"data":    nil,
 			})
 		}
 
@@ -132,13 +135,14 @@ func DeleteOneActivityByID(ctx context.Context, uc usecases.ActivityUseCase) ech
 		_, httpcode, err := uc.DeleteOneActivityByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToDeleteDataActivities,
-				"error":   err.Error(),
+				"status":  "Not Found",
+				"message": fmt.Sprintf(DeleteMsg, GetId),
+				"data":    nil,
 			})
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"status":  "Not Found",
+			"status":  "Success",
 			"message": fmt.Sprintf(DeleteMsg, GetId),
 		})
 	}

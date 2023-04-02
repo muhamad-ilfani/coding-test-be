@@ -122,7 +122,6 @@ func (x *PostgreSQLConn) UpdateOneActivityByID(
 		Email:     email,
 		CreatedAt: createdTime,
 		UpdatedAt: updatedTime,
-		DeletedAt: updatedTime,
 	}
 
 	return res, httpcode, err

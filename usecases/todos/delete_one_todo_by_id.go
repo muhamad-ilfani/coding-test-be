@@ -5,6 +5,8 @@ import (
 	ur "coding-test-be/repository/todo_repository"
 	"coding-test-be/usecases"
 	"context"
+	"errors"
+	"net/http"
 )
 
 func (x *usecase) DeleteOneTodoByID(
@@ -20,6 +22,13 @@ func (x *usecase) DeleteOneTodoByID(
 	}
 
 	activityPG := ur.NewRepository(tx)
+
+	getData, httpcode, err := activityPG.GetOneTodoByID(ctx, repository.GetOneTodoByIDRequest{
+		ID: req.ID,
+	})
+	if getData.ID == 0 || err != nil {
+		return res, http.StatusNotFound, errors.New("id not found")
+	}
 
 	response, httpcode, err := activityPG.DeleteOneTodoByID(ctx, repository.DeleteOneTodoByIDRequest{ID: req.ID})
 	if err != nil {

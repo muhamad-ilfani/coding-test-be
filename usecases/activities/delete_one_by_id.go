@@ -5,6 +5,8 @@ import (
 	ur "coding-test-be/repository/activity_repository"
 	"coding-test-be/usecases"
 	"context"
+	"errors"
+	"net/http"
 )
 
 func (x *usecase) DeleteOneActivityByID(
@@ -20,6 +22,13 @@ func (x *usecase) DeleteOneActivityByID(
 	}
 
 	activityPG := ur.NewRepository(tx)
+
+	getData, httpcode, err := activityPG.GetOneActivityByID(ctx, repository.GetOneActivityByIDRequest{
+		ID: req.ID,
+	})
+	if getData.ID == 0 {
+		return res, http.StatusNotFound, errors.New("id not found")
+	}
 
 	response, httpcode, err := activityPG.DeleteOneActivityByID(ctx, repository.DeleteOneActivityByIDRequest{ID: req.ID})
 	if err != nil {

@@ -26,14 +26,14 @@ type TodoUseCase interface {
 }
 
 type TodoList struct {
-	ID              int64  `json:"id"`
-	ActivityGroupID int64  `json:"activity_group_id"`
-	Title           string `json:"title"`
-	IsActive        bool   `json:"is_active"`
-	Priority        string `json:"priority"`
-	CreatedAt       string `json:"created_at"`
-	UpdatedAt       string `json:"updated_at"`
-	DeletedAt       string `json:"deleted_at"`
+	ID              int64   `json:"id"`
+	ActivityGroupID int64   `json:"activity_group_id"`
+	Title           string  `json:"title"`
+	IsActive        bool    `json:"is_active"`
+	Priority        string  `json:"priority"`
+	CreatedAt       string  `json:"created_at"`
+	UpdatedAt       string  `json:"updated_at"`
+	DeletedAt       *string `json:"deleted_at"`
 }
 
 type CreateTodoRequest struct {

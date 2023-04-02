@@ -29,7 +29,13 @@ func (x *usecase) GetOneActivityByID(
 	}
 
 	if response.ID == 0 {
-		return res, http.StatusNotFound, errors.New("id not found")
+		return res, http.StatusNotFound, errors.New("Not Found")
+	}
+
+	if str := response.DeletedAt.String(); str == "0001-01-01 00:00:00 +0000 UTC" {
+		res.DeletedAt = nil
+	} else {
+		res.DeletedAt = &str
 	}
 
 	res = usecases.GetOneActivityByIDResponse{
@@ -38,7 +44,6 @@ func (x *usecase) GetOneActivityByID(
 		Email:     response.Email,
 		CreatedAt: response.CreatedAt.String(),
 		UpdatedAt: response.UpdatedAt.String(),
-		DeletedAt: response.DeletedAt.String(),
 	}
 
 	return res, httpcode, err

@@ -27,13 +27,20 @@ func (x *usecase) GetAllActivities(
 	}
 
 	for _, val := range response {
+		var deletedAt *string
+		if str := val.DeletedAt.String(); str == "0001-01-01 00:00:00 +0000 UTC" {
+			deletedAt = nil
+		} else {
+			deletedAt = &str
+		}
+
 		res = append(res, usecases.GetAllActivitiesData{
 			ID:        val.ID,
 			Title:     val.Title,
 			Email:     val.Email,
 			CreatedAt: val.CreatedAt.String(),
 			UpdatedAt: val.UpdatedAt.String(),
-			DeletedAt: val.DeletedAt.String(),
+			DeletedAt: deletedAt,
 		})
 	}
 

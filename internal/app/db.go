@@ -62,8 +62,8 @@ func (x *App) initTable(ctx context.Context) (err error) {
 		created_at timestamp NOT NULL DEFAULT now(),
 		updated_by VARCHAR(255) NOT NULL DEFAULT 'SYSTEM',
 		updated_at timestamp NOT NULL DEFAULT now(),
-		deleted_by VARCHAR(255) NOT NULL DEFAULT 'SYSTEM',
-		deleted_at timestamp NOT NULL DEFAULT now()
+		deleted_by VARCHAR(255),
+		deleted_at timestamp
 	);`
 
 	querytodo := `CREATE TABLE IF NOT EXISTS challenge_2_be.todos(
@@ -76,8 +76,8 @@ func (x *App) initTable(ctx context.Context) (err error) {
 		created_at timestamp NOT NULL DEFAULT now(),
 		updated_by VARCHAR(255) NOT NULL DEFAULT 'SYSTEM',
 		updated_at timestamp NOT NULL DEFAULT now(),
-		deleted_by VARCHAR(255) NOT NULL DEFAULT 'SYSTEM',
-		deleted_at timestamp NOT NULL DEFAULT now(),
+		deleted_by VARCHAR(255),
+		deleted_at timestamp,
 		CONSTRAINT user_fk_products FOREIGN KEY (activity_group_id) REFERENCES challenge_2_be.activities (activity_id)
 	);`
 

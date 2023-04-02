@@ -31,6 +31,12 @@ func (x *usecase) GetOneTodoByID(
 		return res, http.StatusNotFound, errors.New("id not found")
 	}
 
+	if str := response.DeletedAt.String(); str == "0001-01-01 00:00:00 +0000 UTC" {
+		res.DeletedAt = nil
+	} else {
+		res.DeletedAt = &str
+	}
+
 	res = usecases.GetOneTodoByIDResponse{
 		ID:              response.ID,
 		ActivityGroupID: response.ActivityGroupID,
@@ -39,7 +45,6 @@ func (x *usecase) GetOneTodoByID(
 		Priority:        response.Priority,
 		CreatedAt:       response.CreatedAt.String(),
 		UpdatedAt:       response.UpdatedAt.String(),
-		DeletedAt:       response.DeletedAt.String(),
 	}
 
 	return res, httpcode, err

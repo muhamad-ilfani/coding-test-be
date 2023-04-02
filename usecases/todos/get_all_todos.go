@@ -28,7 +28,18 @@ func (x *usecase) GetAllTodos(
 		return res, httpcode, err
 	}
 
+	if len(res) <= 0 {
+		return nil, httpcode, err
+	}
+
 	for _, val := range response {
+		var deletedAt *string
+		if str := val.DeletedAt.String(); str == "0001-01-01 00:00:00 +0000 UTC" {
+			deletedAt = nil
+		} else {
+			deletedAt = &str
+		}
+
 		res = append(res, usecases.TodoList{
 			ID:              val.ID,
 			ActivityGroupID: val.ActivityGroupID,
@@ -37,7 +48,7 @@ func (x *usecase) GetAllTodos(
 			Priority:        val.Priority,
 			CreatedAt:       val.CreatedAt.String(),
 			UpdatedAt:       val.UpdatedAt.String(),
-			DeletedAt:       val.DeletedAt.String(),
+			DeletedAt:       deletedAt,
 		})
 	}
 

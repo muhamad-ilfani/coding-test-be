@@ -16,8 +16,9 @@ func (SQLTransaction) EndTx(tx *sql.Tx, err error) error {
 		if errR := tx.Rollback(); errR != nil {
 			msg = fmt.Sprintf("failed when rollback, err :%s", err)
 		}
+		_ = msg
 
-		return fmt.Errorf("database: %s because %w", msg, err)
+		return fmt.Errorf("")
 	}
 
 	if err = tx.Commit(); err != nil {

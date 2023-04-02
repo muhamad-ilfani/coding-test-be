@@ -26,7 +26,7 @@ func (x *usecase) UpdateOneTodoByID(
 	getData, httpcode, err := activityPG.GetOneTodoByID(ctx, repository.GetOneTodoByIDRequest{
 		ID: req.ID,
 	})
-	if getData.Title == "" || err != nil {
+	if getData.ID == 0 || err != nil {
 		return res, http.StatusNotFound, errors.New("id not found")
 	}
 
@@ -40,15 +40,30 @@ func (x *usecase) UpdateOneTodoByID(
 		return res, httpcode, err
 	}
 
+	if str := getData.DeletedAt.String(); str == "0001-01-01 00:00:00 +0000 UTC" {
+		res.DeletedAt = nil
+	} else {
+		res.DeletedAt = &str
+	}
+
+	if req.Priority != "" {
+		getData.Priority = req.Priority
+	}
+	if req.Title != "" {
+		getData.Title = req.Title
+	}
+	if req.IsActive != getData.IsActive {
+		getData.IsActive = req.IsActive
+	}
+
 	res = usecases.UpdateOneTodoByIDResponse{
 		ID:              getData.ID,
 		ActivityGroupID: getData.ActivityGroupID,
 		Title:           getData.Title,
 		IsActive:        getData.IsActive,
-		Priority:        getData.Priority,
+		Priority:        req.Priority,
 		CreatedAt:       getData.CreatedAt.String(),
 		UpdatedAt:       response.UpdatedAt.String(),
-		DeletedAt:       getData.DeletedAt.String(),
 	}
 
 	return res, httpcode, err

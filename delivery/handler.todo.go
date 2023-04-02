@@ -28,8 +28,9 @@ func CreateTodo(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc {
 		res, httpcode, err := uc.CreateTodo(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToCreateActivity,
-				"error":   err.Error(),
+				"status":  "Bad Request",
+				"message": err.Error(),
+				"data":    nil,
 			})
 		}
 
@@ -50,8 +51,9 @@ func GetAllTodos(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFunc 
 		res, httpcode, err := uc.GetAllTodos(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToCreateActivity,
-				"error":   err.Error(),
+				"status":  "Not Found",
+				"message": fmt.Sprintf(DeleteMsg, "listed"),
+				"data":    nil,
 			})
 		}
 
@@ -74,8 +76,9 @@ func GetOneTodoByID(ctx context.Context, uc usecases.TodoUseCase) echo.HandlerFu
 		res, httpcode, err := uc.GetOneTodoByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToCreateActivity,
-				"error":   err.Error(),
+				"status":  "Not Found",
+				"message": fmt.Sprintf(DeleteMsg, GetId),
+				"data":    nil,
 			})
 		}
 
@@ -107,8 +110,9 @@ func UpdateOneTodoByID(ctx context.Context, uc usecases.TodoUseCase) echo.Handle
 		res, httpcode, err := uc.UpdateOneTodoByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToUpdateDataActivities,
-				"error":   err.Error(),
+				"status":  "Not Found",
+				"message": fmt.Sprintf(DeleteMsg, GetId),
+				"data":    nil,
 			})
 		}
 
@@ -131,13 +135,14 @@ func DeleteOneTodoByID(ctx context.Context, uc usecases.TodoUseCase) echo.Handle
 		_, httpcode, err := uc.DeleteOneTodoByID(ctx, form)
 		if err != nil {
 			return c.JSON(httpcode, map[string]interface{}{
-				"message": FailedToDeleteDataActivities,
-				"error":   err.Error(),
+				"status":  "Not Found",
+				"message": fmt.Sprintf(DeleteMsg, GetId),
+				"data":    nil,
 			})
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"status":  "Not Found",
+			"status":  "Success",
 			"message": fmt.Sprintf(DeleteMsgTodo, GetId),
 		})
 	}
