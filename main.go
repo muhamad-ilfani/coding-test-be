@@ -1,7 +1,7 @@
 package main
 
 import (
-	"coding-test-be/app"
+	"coding-test-be/internal/app"
 	"context"
 
 	"github.com/joho/godotenv"

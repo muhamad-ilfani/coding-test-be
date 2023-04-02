@@ -20,10 +20,11 @@ func (x *App) initDB(ctx context.Context) (err error) {
 		dbname   = os.Getenv("DB_NAME")
 	)
 
-	sqlconn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", host, port, user, password, dbname)
+	sqlconn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 
 	x.DB, err = sqlx.Connect("postgres", sqlconn)
 	if err != nil {
+		fmt.Printf("==CONN: %s ===", sqlconn)
 		return err
 	}
 
